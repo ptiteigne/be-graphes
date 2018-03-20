@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * Class representing a path between nodes in a graph.
@@ -25,13 +26,55 @@ public class Path {
      * 
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
-     * 
-     * @deprecated Need to be implemented.
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+        
+        ListIterator<Node> iteNodes = nodes.listIterator();
+        Node nodeUn;
+        Node nodeDeux;
+        
+        // If there are no nodes, we just return an empty path
+        try {
+        	nodeDeux = iteNodes.next();
+        }
+        catch(Exception NoSuchElementException) {
+        	return new Path(graph);
+        }
+        
+        // If there is any node...
+        while(iteNodes.hasNext()) {
+        	nodeUn = nodeDeux;
+        	
+        	if(iteNodes.hasNext() == true) {
+        		nodeDeux = iteNodes.next();
+        		
+        		// Arc List from nodeUn
+        		List<Arc> arcsFromUn = nodeUn.getSuccessors();
+        		// The best arc that will be selected in nodeUn
+        		Arc bestArc = null;
+        		
+        		// Look for the best arc
+        		for(Arc unArc : arcsFromUn) {
+        			if(unArc.getDestination() == nodeDeux) {
+        				if(bestArc == null)
+        					bestArc = unArc;
+        				else if (unArc.getMinimumTravelTime() < bestArc.getMinimumTravelTime())
+        					bestArc = unArc;
+        			}
+        		}
+        		
+        		// If we found no arc, the nodes aren't connected so we throw an Exception
+        		if (bestArc == null)
+        			throw new IllegalArgumentException();
+        		
+        		arcs.add(bestArc);
+        		
+        	}
+        		
+        }
+        
         return new Path(graph, arcs);
     }
 
@@ -51,7 +94,51 @@ public class Path {
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+        
+        ListIterator<Node> iteNodes = nodes.listIterator();
+        Node nodeUn;
+        Node nodeDeux;
+        
+        // If there are no nodes, we just return an empty path
+        try {
+        	nodeDeux = iteNodes.next();
+        }
+        catch(Exception NoSuchElementException) {
+        	return new Path(graph);
+        }
+        
+        // If there is any node...
+        while(iteNodes.hasNext()) {
+        	nodeUn = nodeDeux;
+        	
+        	if(iteNodes.hasNext() == true) {
+        		nodeDeux = iteNodes.next();
+        		
+        		// Arc List from nodeUn
+        		List<Arc> arcsFromUn = nodeUn.getSuccessors();
+        		// The best arc that will be selected in nodeUn
+        		Arc bestArc = null;
+        		
+        		// Look for the best arc
+        		for(Arc unArc : arcsFromUn) {
+        			if(unArc.getDestination() == nodeDeux) {
+        				if(bestArc == null)
+        					bestArc = unArc;
+        				else if (unArc.getLength() < bestArc.getLength())
+        					bestArc = unArc;
+        			}
+        		}
+        		
+        		// If we found no arc, the nodes aren't connected so we throw an Exception
+        		if (bestArc == null)
+        			throw new IllegalArgumentException();
+        		
+        		arcs.add(bestArc);
+        		
+        	}
+        		
+        }
+        
         return new Path(graph, arcs);
     }
 
