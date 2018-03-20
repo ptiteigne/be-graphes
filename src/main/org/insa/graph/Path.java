@@ -46,7 +46,6 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
@@ -200,14 +199,10 @@ public class Path {
      */
     public float getLength() {
     	float result = 0 ;
-    	List<Arc> arcs = getArcs();
     	for(Arc unarc : arcs)
     	{
     		result = result + unarc.getLength();
     	}
-    	
-    	
-    	
         return result;
     }
 
@@ -235,7 +230,6 @@ public class Path {
      */
     public double getMinimumTravelTime() {
     	double result = 0 ;
-    	List<Arc> arcs = getArcs();
     	for(Arc unarc : arcs)
     	{
     		result = result + unarc.getMinimumTravelTime();
