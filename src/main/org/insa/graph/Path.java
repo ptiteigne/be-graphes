@@ -2,6 +2,7 @@ package org.insa.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -183,12 +184,42 @@ public class Path {
      * </ul>
      * 
      * @return true if the path is valid, false otherwise.
-     * 
-     * @deprecated Need to be implemented.
      */
     public boolean isValid() {
-        // TODO:
-        return false;
+    	
+    	List<Arc> arcs = this.getArcs();
+        
+    	// If path is empty, return true
+    	if(this.isEmpty() == true)
+    		return true;
+    	
+    	// If there is no arc and there is one node (origin == destination), return true
+    	else if (arcs.isEmpty() && (this.origin == this.getDestination()))
+    		return true;
+    	
+    	// If the origin of the first arc is indeed the origin of the path...
+    	else if (arcs.get(0).getOrigin() == this.origin){
+    		
+    		Iterator<Arc> iteArcs = arcs.iterator();
+    		Arc arcUn;
+    		Arc arcDeux = iteArcs.next();
+    		
+    		// We check if every two consecutive arcs are valid
+    		while(iteArcs.hasNext()) {
+    			arcUn = arcDeux;
+    			arcDeux = iteArcs.next();
+    			
+    			// If any two consecutive arcs are invalid, we return false
+    			if(arcUn.getDestination() != arcDeux.getOrigin())
+    				return false;
+    			
+    		}
+    		
+    		return true;    		
+    		
+    	}
+    	else
+    		return false;
     }
 
     /**
