@@ -29,7 +29,9 @@ public class Path {
      */
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
+    	
+    	// The list of arcs composing the path
+    	List<Arc> arcs;
         
         ListIterator<Node> iteNodes = nodes.listIterator();
         Node nodeUn;
@@ -43,6 +45,13 @@ public class Path {
         	return new Path(graph);
         }
         
+        // If there is only one node in the path, we return a path with only this node
+        if (!iteNodes.hasNext())
+        	return new Path(graph,nodeDeux);
+        else
+        	arcs = new ArrayList<Arc>();
+        
+        
         // If there is any node...
         while(iteNodes.hasNext()) {
         	nodeUn = nodeDeux;
@@ -51,16 +60,20 @@ public class Path {
         		nodeDeux = iteNodes.next();
         		
         		// Arc List from nodeUn
-        		List<Arc> arcsFromUn = nodeUn.getSuccessors();
+        		Iterator<Arc> arcsFromUn = nodeUn.iterator();
+        		// Arc we're checking
+        		Arc unArc;
         		// The best arc that will be selected in nodeUn
         		Arc bestArc = null;
         		
         		// Look for the best arc
-        		for(Arc unArc : arcsFromUn) {
+        		while(arcsFromUn.hasNext()) {
+        			
+        			unArc = arcsFromUn.next();
+        			
         			if(unArc.getDestination() == nodeDeux) {
-        				if(bestArc == null)
-        					bestArc = unArc;
-        				else if (unArc.getMinimumTravelTime() < bestArc.getMinimumTravelTime())
+        				if(bestArc == null ||
+        						unArc.getMinimumTravelTime() < bestArc.getMinimumTravelTime())
         					bestArc = unArc;
         			}
         		}
@@ -93,7 +106,7 @@ public class Path {
      */
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
+        List<Arc> arcs;
         
         ListIterator<Node> iteNodes = nodes.listIterator();
         Node nodeUn;
@@ -107,6 +120,12 @@ public class Path {
         	return new Path(graph);
         }
         
+        // If there is only one node in the path, we return a path with only this node
+        if (!iteNodes.hasNext())
+        	return new Path(graph,nodeDeux);
+        else
+        	arcs = new ArrayList<Arc>();
+        
         // If there is any node...
         while(iteNodes.hasNext()) {
         	nodeUn = nodeDeux;
@@ -115,16 +134,19 @@ public class Path {
         		nodeDeux = iteNodes.next();
         		
         		// Arc List from nodeUn
-        		List<Arc> arcsFromUn = nodeUn.getSuccessors();
+        		Iterator<Arc> arcsFromUn = nodeUn.iterator();
+        		// Arc we're checking
+        		Arc unArc;
         		// The best arc that will be selected in nodeUn
         		Arc bestArc = null;
         		
         		// Look for the best arc
-        		for(Arc unArc : arcsFromUn) {
+        		while(arcsFromUn.hasNext()) {
+        			
+        			unArc = arcsFromUn.next();
         			if(unArc.getDestination() == nodeDeux) {
-        				if(bestArc == null)
-        					bestArc = unArc;
-        				else if (unArc.getLength() < bestArc.getLength())
+        				if(bestArc == null ||
+        						unArc.getLength() < bestArc.getLength())
         					bestArc = unArc;
         			}
         		}
@@ -289,7 +311,8 @@ public class Path {
     		return true;
     	
     	// If there is no arc and there is one node (origin == destination), return true
-    	else if (arcs.isEmpty() && (this.origin == this.getDestination()))
+    	//else if (arcs.isEmpty() && (this.origin == this.getDestination()))
+    	else if (arcs.isEmpty())
     		return true;
     	
     	// If the origin of the first arc is indeed the origin of the path...
@@ -343,7 +366,12 @@ public class Path {
      */
     public double getTravelTime(double speed) {
         
-        return ((this.getLength()/1000)/speed)/3600;
+    	double result = 0 ;
+    	for(Arc unarc : arcs)
+    	{
+    		result = result + unarc.getTravelTime(speed);
+    	}
+        return result;
         
     }
 
