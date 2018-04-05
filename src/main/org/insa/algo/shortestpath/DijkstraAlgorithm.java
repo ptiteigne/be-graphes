@@ -16,7 +16,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
     	// Retrieve the graph.
    		ShortestPathData data = getInputData();
-    	Graph graph = data.getGraph();        
+    	Graph graph = data.getGraph();
         
         final int nbNodes = graph.size();
         

@@ -2,6 +2,18 @@ package org.insa.algo.shortestpath;
 
 import org.insa.graph.Node;
 
+/**
+ * A label is associated to a node.
+ * When evaluating a shortest path with the Dijkstra Algorithm,
+ * a label is associated to every node.
+ * 
+ * The label has the following attributes :
+ * 	<li> a boolean telling if the node has been marked </li>
+ *	<li> the father of this node </li>
+ *	<li> the cost to reach the node </li>
+ * @author Julien and Quentin
+ *
+ */
 public class Label {
 	
 	private int cost;
