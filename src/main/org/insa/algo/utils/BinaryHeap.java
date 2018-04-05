@@ -147,9 +147,7 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
     	
     	int index;
     	if ((index = this.array.indexOf(x))==-1 || index >= currentSize)
-    	{
     		throw new ElementNotFoundException(x);
-    	}
     	
     	E lastItem = this.array.get(--this.currentSize);
     	this.arraySet(index, lastItem);

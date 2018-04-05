@@ -35,5 +35,25 @@ public class Label {
 	public void setCost(int cost) {
 		this.cost = cost;
 	}
+	
+	public boolean isMarked() {
+		return this.isMarked;
+	}
+	
+	public void Mark()
+	{
+		this.isMarked = true;
+	}
+	
+	public Node getFather()
+	{
+		return this.father;
+	}
+	
+	public void setFather(Node father)
+	{
+		this.father = father;
+	}
+	
 
 }
