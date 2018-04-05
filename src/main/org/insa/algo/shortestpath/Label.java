@@ -8,15 +8,18 @@ import org.insa.graph.Node;
  * a label is associated to every node.
  * 
  * The label has the following attributes :
+ * 	<li> the node Id associated to the label </li>
  * 	<li> a boolean telling if the node has been marked </li>
  *	<li> the father of this node </li>
  *	<li> the cost to reach the node </li>
  * @author Julien and Quentin
  *
  */
-public class Label {
+public class Label implements Comparable<Label> {
 	
-	private int cost;
+	private int nodeId;
+	
+	private double cost;
 	
 	private Node father;
 	
@@ -33,26 +36,50 @@ public class Label {
 	 * 
 	 */
 	public Label() {
-		this.cost = Integer.MAX_VALUE;
+		this.cost = Double.POSITIVE_INFINITY;
 		this.father = null;
 		this.isMarked = false;
 	}
 	
+	// Get the Id of the node associated to this label
+	public int getId() {
+		return this.nodeId;
+	}
+	
+	// Set the Id of the node associated to this label
+	public void setId(int id) {
+		this.nodeId = id;
+	}
+	
 	// Get the cost to reach this node
-	public int getCost() {
+	public double getCost() {
 		return this.cost;
 	}
 	
 	// Set the cost to reach this node
-	public void setCost(int cost) {
+	public void setCost(double cost) {
 		this.cost = cost;
 	}
+	
+	// Update cost if the parameter is lower than the current cost
+	// Return a boolean telling if the cost has been updated
+	public boolean updateCost(double cost) {
+		
+		if (cost < this.cost) {
+			this.cost = cost;
+			return true;
+		}
+		else
+			return false;
+		
+	}
+	
 	
 	public boolean isMarked() {
 		return this.isMarked;
 	}
 	
-	public void Mark()
+	public void mark()
 	{
 		this.isMarked = true;
 	}
@@ -65,6 +92,18 @@ public class Label {
 	public void setFather(Node father)
 	{
 		this.father = father;
+	}
+
+	@Override
+	public int compareTo(Label o) {
+		if(o == null)
+			throw new NullPointerException();
+		else if(this.cost > o.cost)
+			return 1;
+		else if (this.cost < o.cost)
+			return -1;
+		else
+			return 0;
 	}
 	
 
