@@ -19,6 +19,8 @@ public class Label implements Comparable<Label> {
 	
 	private int nodeId;
 	
+	private Node currentNode;
+	
 	private double cost;
 	
 	private Node father;
@@ -39,6 +41,7 @@ public class Label implements Comparable<Label> {
 		this.cost = Double.POSITIVE_INFINITY;
 		this.father = null;
 		this.isMarked = false;
+		this.currentNode =null;
 	}
 	
 	// Get the Id of the node associated to this label
@@ -61,6 +64,18 @@ public class Label implements Comparable<Label> {
 		this.cost = cost;
 	}
 	
+	// get the node associated to the label
+	public Node getNode()
+	{
+		return this.currentNode;
+	}
+	
+	//set the node of the label
+	public void setNode(Node node)
+	{
+		this.currentNode = node;	
+	}
+
 	// Update cost if the parameter is lower than the current cost
 	// Return a boolean telling if the cost has been updated
 	public boolean updateCost(double cost) {
