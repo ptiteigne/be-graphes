@@ -51,6 +51,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		
 		boolean stillUnmarkedNodes = true;
 		
+		int NbIteration = 0;
+		
 		
 		// Node currently being marked
 		//Node currentNode;
@@ -68,6 +70,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			//labels[currentNode.getId()].mark();
 			currentLabel = heap.deleteMin();
 			currentLabel.mark();
+			
+			// Test cost of labels marked
+			//System.out.println(currentLabel.getCost()+"\n");
+			
 			notifyNodeMarked(currentLabel.getNode());
 			
 			// Iteration over every successor of currentNode
@@ -112,6 +118,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			
 			
 			stillUnmarkedNodes = false;
+
+			NbIteration++;
 			
 			// Check if there is still an unmarked node
 			for (Label label : labels) {
@@ -129,7 +137,6 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		// Destination has no predecessor, the solution is infeasible...
 		if (labels[data.getDestination().getId()].getFather() == null) {
 			solution = new ShortestPathSolution(data, Status.INFEASIBLE);
-			System.out.println("oups");
 		} else {
 
 			// The destination has been found, notify the observers.
@@ -153,6 +160,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			// Create the final solution.
 			solution = new ShortestPathSolution(data, Status.OPTIMAL, path);
 		}
+		
+		//Test
+		// System.out.println("Nombre d'iterations :"+NbIteration+"\n");
 
 		return solution;
 		
