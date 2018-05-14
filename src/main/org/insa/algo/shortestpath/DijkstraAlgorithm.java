@@ -51,7 +51,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		
 		boolean stillUnmarkedNodes = true;
 		
-		int NbIteration = 0;
+		// int NbIteration = 0;
 		
 		
 		// Node currently being marked
@@ -97,7 +97,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 					// Update cost if necessary
 					// If there is an update, insert this node on the heap
 					if ( labels[nextNode.getId()].updateCost(
-							currentLabel.getCost()+arc.getLength()) ) 
+							currentLabel.getCost()+data.getCost(arc)) ) 
 					{
 						
 						labels[nextNode.getId()].setFather(currentLabel.getNode());
@@ -119,7 +119,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			
 			stillUnmarkedNodes = false;
 
-			NbIteration++;
+			//NbIteration++;
 			
 			// Check if there is still an unmarked node
 			for (Label label : labels) {
