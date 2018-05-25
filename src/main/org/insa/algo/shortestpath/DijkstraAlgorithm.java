@@ -102,8 +102,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 				
 				if(!labels[nextNode.getId()].isMarked()) {
 					
-					if (labels[nextNode.getId()].getNode() == data.getDestination())
-						notifyDestinationReached(arc.getDestination());
+	
 					
 					// Update cost if necessary
 					// If there is an update, insert this node on the heap
@@ -167,7 +166,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			Path path = Path.createShortestPathFromNodes(graph, nodes);
 
 			// Create the final solution.
-			solution = new ShortestPathSolution(data, Status.OPTIMAL, path);
+			solution = new ShortestPathSolution(data, Status.FEASIBLE, path);
 		}
 		
 		//Test
