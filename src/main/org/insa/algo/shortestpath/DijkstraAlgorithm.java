@@ -50,6 +50,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		//Arc[] predecessorArcs = new Arc[nbNodes];
 		
 		boolean stillUnmarkedNodes = true;
+		boolean destinationReached = false; 
 		
 		// int NbIteration = 0;
 		
@@ -63,13 +64,23 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		// Successor currently checked
 		Node nextNode;
 		
-		while(stillUnmarkedNodes && !labels[data.getDestination().getId()].isMarked() && !heap.isEmpty()) {
+		while(stillUnmarkedNodes && !labels[data.getDestination().getId()].isMarked() && !heap.isEmpty() && !destinationReached) {
 			
 			// Extracting the min Node from the the heap and marking it
 			//currentNode = heap.deleteMin();
 			//labels[currentNode.getId()].mark();
 			currentLabel = heap.deleteMin();
 			currentLabel.mark();
+			
+			// if destination reached, set destinationReached to true
+			if(currentLabel.getNode().equals(data.getDestination()))
+			{
+				// The destination has been found, notify the observers.
+				notifyDestinationReached(data.getDestination());
+				destinationReached = true; 
+
+				
+			}
 			
 			// Test cost of labels marked
 			//System.out.println(currentLabel.getCost()+"\n");
@@ -139,9 +150,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			solution = new ShortestPathSolution(data, Status.INFEASIBLE);
 		} else {
 
-			// The destination has been found, notify the observers.
-			notifyDestinationReached(data.getDestination());
-
+	
 			ArrayList<Node> nodes = new ArrayList<Node>();
 			
 			Label label = labels[data.getDestination().getId()];
