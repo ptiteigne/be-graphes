@@ -495,6 +495,44 @@ public class ShortestPathTest {
 	    
     }
     
+    @Test
+    public void testwithoutOracleTriangularInequality() throws IOException {
+    	
+    	//we imagine a "triangle path" ABC with AB as hypotenuse, we check that AB =< AC + BC 
+    	
+    	ShortestPathData dataAB, dataAC, dataCB;
+  	    
+  	    DijkstraAlgorithm dijkstraAB, dijkstraAC, dijkstraCB;
+  	    ShortestPathSolution solDijkstraAB, solDijkstraAC, solDijkstraCB;
+  	    
+  	    
+  	   dataAB = new ShortestPathData(graph_map, graph_map.get(19208), graph_map.get(12304), filterLengthAndAllArcs);
+	    
+	   dijkstraAB = new DijkstraAlgorithm(dataAB);
+	   solDijkstraAB = dijkstraAB.doRun();
+	   
+	   
+	   dataAC = new ShortestPathData(graph_map, graph_map.get(19208), graph_map.get(9918), filterLengthAndAllArcs); 
+	   dijkstraAC = new DijkstraAlgorithm(dataAC);
+	   solDijkstraAC = dijkstraAC.doRun();
+	   
+	   
+	   dataCB = new ShortestPathData(graph_map, graph_map.get(9918), graph_map.get(12304), filterLengthAndAllArcs); 
+	   dijkstraCB = new DijkstraAlgorithm(dataCB);
+	   solDijkstraCB = dijkstraCB.doRun();
+	    
+	   // if AB is not feasible,we test if one of AC or BC is not feasible
+	    if (!solDijkstraAB.isFeasible() || !solDijkstraAC.isFeasible() || !solDijkstraCB.isFeasible()) {
+	    	assertEquals(solDijkstraAB.isFeasible(), solDijkstraCB.isFeasible() && solDijkstraCB.isFeasible());
+	    }
+	    
+	    else {
+		    assertTrue(solDijkstraAB.getPath().getLength() <=(solDijkstraAC.getPath().getLength()+solDijkstraAC.getPath().getLength()));
+	    }
+  	    
+    	
+    }
+    
     public static void main(String[] args) throws IOException {
     	
     	initAll();
