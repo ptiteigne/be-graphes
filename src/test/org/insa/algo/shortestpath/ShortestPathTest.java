@@ -527,7 +527,7 @@ public class ShortestPathTest {
 	    }
 	    
 	    else {
-		    assertTrue(solDijkstraAB.getPath().getLength() <=(solDijkstraAC.getPath().getLength()+solDijkstraAC.getPath().getLength()));
+		    assertTrue(solDijkstraAB.getPath().getLength() <=(solDijkstraAC.getPath().getLength()+solDijkstraCB.getPath().getLength()));
 	    }
   	    
     	
