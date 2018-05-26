@@ -75,19 +75,6 @@ public class Label implements Comparable<Label> {
 	{
 		this.currentNode = node;	
 	}
-
-	// Update cost if the parameter is lower than the current cost
-	// Return a boolean telling if the cost has been updated
-	public boolean updateCost(double cost) {
-		
-		if (cost < this.cost) {
-			this.cost = cost;
-			return true;
-		}
-		else
-			return false;
-		
-	}
 	
 	
 	public boolean isMarked() {

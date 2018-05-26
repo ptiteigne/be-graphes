@@ -3,9 +3,11 @@ package org.insa.algo.shortestpath;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 
 import org.insa.algo.AbstractSolution.Status;
 import org.insa.algo.utils.BinaryHeap;
+import org.insa.algo.utils.ElementNotFoundException;
 import org.insa.graph.Arc;
 import org.insa.graph.Graph;
 import org.insa.graph.Node;
@@ -19,16 +21,16 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
     @Override
     protected ShortestPathSolution doRun() {
-
+    	
     	// Retrieve the graph.
-   		ShortestPathData data = getInputData();
-    	Graph graph = data.getGraph();
-        
-        final int nbNodes = graph.size();
-        
-        // Initialize the heap
-        BinaryHeap<Label> heap = new BinaryHeap<Label>();
-        
+		ShortestPathData data = getInputData();
+		Graph graph = data.getGraph();
+	    
+	    final int nbNodes = graph.size();
+	    
+	    // Initialize the heap
+	    BinaryHeap<Label> heap = new BinaryHeap<Label>();
+	    
 		// Initialize array of labels.
 		Label[] labels = new Label[nbNodes];
 		
@@ -36,27 +38,17 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		for (int i=0; i<nbNodes ; i++) {
 			labels[i] = new Label();
 			labels[i].setNode(graph.get(i));
+			labels[i].setId(i);
 		}
-		
+    	
 		// Set source cost to zero and insert it on the heap
 		labels[data.getOrigin().getId()].setCost(0);
 		heap.insert(labels[data.getOrigin().getId()]);
 		
-
-		// Notify observers about the first event (origin processed).
 		notifyOriginProcessed(data.getOrigin());
-
-		// Initialize array of predecessors.
-		//Arc[] predecessorArcs = new Arc[nbNodes];
-		
-		boolean stillUnmarkedNodes = true;
-		boolean destinationReached = false; 
-		
-		// int NbIteration = 0;
-		
 		
 		// Node currently being marked
-		//Node currentNode;
+		Node currentNode;
 		
 		// Label currently marked
 		Label currentLabel;
@@ -64,115 +56,94 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		// Successor currently checked
 		Node nextNode;
 		
-		while(stillUnmarkedNodes && !labels[data.getDestination().getId()].isMarked() && !heap.isEmpty() && !destinationReached) {
+		// We iterate while the heap is not empty AND the destination hasn't been reached
+		while(!heap.isEmpty() && !labels[data.getDestination().getId()].isMarked()) {
 			
-			// Extracting the min Node from the the heap and marking it
-			//currentNode = heap.deleteMin();
-			//labels[currentNode.getId()].mark();
+			// Getting the node with minimum cost from the heap
 			currentLabel = heap.deleteMin();
-			currentLabel.mark();
 			
-			// if destination reached, set destinationReached to true
-			if(currentLabel.getNode().equals(data.getDestination()))
-			{
-				// The destination has been found, notify the observers.
+			currentNode = currentLabel.getNode();
+			
+			if (currentLabel.getId() == data.getDestination().getId()) {
 				notifyDestinationReached(data.getDestination());
-				destinationReached = true; 
-
-				
 			}
 			
-			// Test cost of labels marked
-			//System.out.println(currentLabel.getCost()+"\n");
+			// Marking the node
+			currentLabel.mark();
+			notifyNodeMarked(currentNode);
 			
-			notifyNodeMarked(currentLabel.getNode());
-			
-			// Iteration over every successor of currentNode
-			for(Arc arc : currentLabel.getNode()) {
+			// Iterating over the arcs of this node
+			for(Arc arc : currentNode) {
 				
-				// Small test to check allowed roads...
-				// Not sure if necessary
-				if (!data.isAllowed(arc)) {
+				
+				// Check if the arc is allowed or not, according to the inspector
+				// if not, go to next iteration
+				if(!data.isAllowed(arc))
 					continue;
-				}
 				
 				nextNode = arc.getDestination();
 				
+				// If the following node hasn't been marked...
+				//if(!labels[nextNode.getId()].isMarked()) {
+					
 				notifyNodeReached(nextNode);
 				
-				if(!labels[nextNode.getId()].isMarked()) {
+				// If we found a cheaper path to this node... we update its cost and set his new father
+				if (labels[nextNode.getId()].getCost() >
+						currentLabel.getCost() + data.getCost(arc) ) {
 					
-	
-					
-					// Update cost if necessary
-					// If there is an update, insert this node on the heap
-					if ( labels[nextNode.getId()].updateCost(
-							currentLabel.getCost()+data.getCost(arc)) ) 
-					{
-						
-						labels[nextNode.getId()].setFather(currentLabel.getNode());
-						
-						try {
-							heap.remove(labels[nextNode.getId()]);
-						}
-						catch(Exception ElementNotFoundException) {}
-						
-						heap.insert(labels[nextNode.getId()]);
-						
+					try {
+						heap.remove(labels[nextNode.getId()]);
 					}
+					catch (ElementNotFoundException ignored) {}
+					
+					labels[nextNode.getId()].setCost(
+							currentLabel.getCost() + data.getCost(arc));
+					labels[nextNode.getId()].setFather(currentNode);
+					
+					heap.insert(labels[nextNode.getId()]);
 					
 				}
+					
+					
 				
 			}
 			
-			
-			
-			stillUnmarkedNodes = false;
-
-			//NbIteration++;
-			
-			// Check if there is still an unmarked node
-			for (Label label : labels) {
-				if (label.isMarked() == false){
-					stillUnmarkedNodes = true;
-					break;
-				}
-			}
-			
 		}
-		
-		
-		ShortestPathSolution solution = null;
-
-		// Destination has no predecessor, the solution is infeasible...
-		if (labels[data.getDestination().getId()].getFather() == null) {
-			solution = new ShortestPathSolution(data, Status.INFEASIBLE);
-		} else {
-
-	
-			ArrayList<Node> nodes = new ArrayList<Node>();
-			
-			Label label = labels[data.getDestination().getId()];
-			
-			while (label.getFather() != null) {
-				nodes.add(label.getNode());
-				label = labels[label.getFather().getId()];
-			}
-			
-			nodes.add(label.getNode());
-			
-			Collections.reverse(nodes);
-			
-			Path path = Path.createShortestPathFromNodes(graph, nodes);
-
-			// Create the final solution.
-			solution = new ShortestPathSolution(data, Status.FEASIBLE, path);
-		}
-		
-		//Test
-		// System.out.println("Nombre d'iterations :"+NbIteration+"\n");
-
-		return solution;
+    	
+    	ShortestPathSolution solution = null;
+    	
+    	// If destination has no predecessors, the solution is infeasible
+    	if (labels[data.getDestination().getId()].getFather() == null)
+    		return new ShortestPathSolution(data, Status.INFEASIBLE);
+    	
+    	else
+    	{
+    		ArrayList<Node> nodes = new ArrayList<Node>();
+    		
+    		currentLabel = labels[data.getDestination().getId()];
+    		
+    		// Building the list of nodes forming the path
+    		while (currentLabel.getNode() != data.getOrigin() && currentLabel.getFather() != null) {
+    			nodes.add(currentLabel.getNode());
+    			currentLabel = labels[currentLabel.getFather().getId()];
+    		}
+    		
+    		// Adding the origin to the list
+    		nodes.add(currentLabel.getNode());
+    		
+    		// Inverting the list
+    		Collections.reverse(nodes);
+    		
+    		Path path = Path.createShortestPathFromNodes(graph, nodes);
+    		
+    		solution = new ShortestPathSolution(data, Status.OPTIMAL, path);
+    			
+    		
+    	}
+    		
+    	
+    	return solution;
 		
     }
 

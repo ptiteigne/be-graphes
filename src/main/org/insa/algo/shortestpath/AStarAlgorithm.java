@@ -106,16 +106,17 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 					
 					// Update cost if necessary
 					// If there is an update, insert this node on the heap
-					if ( labels[nextNode.getId()].updateCost(
-							currentLabel.getCost()+data.getCost(arc)) ) 
+					if ( labels[nextNode.getId()].getCost() >
+							currentLabel.getCost()+data.getCost(arc) )  
 					{
-						
-						labels[nextNode.getId()].setFather(currentLabel.getNode());
 						
 						try {
 							heap.remove(labels[nextNode.getId()]);
 						}
 						catch(Exception ElementNotFoundException) {}
+						
+						labels[nextNode.getId()].setFather(currentLabel.getNode());
+						labels[nextNode.getId()].setCost(currentLabel.getCost()+data.getCost(arc));
 						
 						heap.insert(labels[nextNode.getId()]);
 						
