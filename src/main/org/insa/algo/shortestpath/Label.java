@@ -59,6 +59,11 @@ public class Label implements Comparable<Label> {
 		return this.cost;
 	}
 	
+	// Get the TOTAL cost to reach this node (useless in normal Labels)
+	public double getTotalCost() {
+		return this.cost;
+	}
+	
 	// Set the cost to reach this node
 	public void setCost(double cost) {
 		this.cost = cost;
@@ -100,9 +105,9 @@ public class Label implements Comparable<Label> {
 	public int compareTo(Label o) {
 		if(o == null)
 			throw new NullPointerException();
-		else if(this.cost > o.cost)
+		else if(this.getTotalCost() > o.cost)
 			return 1;
-		else if (this.cost < o.cost)
+		else if (this.getTotalCost() < o.cost)
 			return -1;
 		else
 			return 0;
