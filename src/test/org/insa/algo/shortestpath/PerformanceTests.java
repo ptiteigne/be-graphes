@@ -118,6 +118,7 @@ public class PerformanceTests {
         	System.out.println("Error Printing Tab Delimited File");
         	System.out.println("The file path is " + nodePairsSetFile);
         	System.out.println("Are you sure?");
+        	System.exit(1);
     	}
 
         System.out.println("Pairs Generated!");
@@ -212,8 +213,10 @@ public class PerformanceTests {
 			initializeWithMidiPyrenees();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Problem while loading the map.");
-			return;
+			System.out.println("Error reading graph file.");
+    		System.out.println("File path to the graph is " + mapMidiPyrenees);
+    		System.out.println("Are you sure?");
+			System.exit(1);
 		}
     	
     	filterLengthAndAllArcs = ArcInspectorFactory.getAllFilters().get(0);
