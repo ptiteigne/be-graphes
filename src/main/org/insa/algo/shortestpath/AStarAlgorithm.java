@@ -3,6 +3,7 @@ package org.insa.algo.shortestpath;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.insa.algo.AbstractInputData;
 import org.insa.algo.AbstractSolution.Status;
 import org.insa.algo.utils.BinaryHeap;
 import org.insa.algo.utils.ElementNotFoundException;
@@ -15,6 +16,38 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 
     public AStarAlgorithm(ShortestPathData data) {
         super(data);
+    }
+    
+    private double calculateEstimatedCostToDestination(ShortestPathData data, LabelStar label) {
+    	
+    	double estimatedCost = Double.POSITIVE_INFINITY;
+		
+		if (data.getMode() == AbstractInputData.Mode.LENGTH)
+			estimatedCost = label.getNode().getPoint().distanceTo(data.getDestination().getPoint());
+		
+		else if (data.getMode() == AbstractInputData.Mode.TIME) {
+			
+			// Get the maximum speed
+			int maxSpeedInt = data.getMaximumSpeed();
+			double maxSpeed;
+			
+			// If there is no maximum speed, set it to 130
+			// In both cases we need to cast it to a double
+			if (maxSpeedInt == -1)
+				maxSpeed = 130.0;
+			else
+				maxSpeed = (double)maxSpeedInt;
+			
+			// Put the speed in m/s
+			maxSpeed /= 3.6;
+			
+			estimatedCost = label.getNode().getPoint().distanceTo(data.getDestination().getPoint())
+								/ maxSpeed;
+			
+		}
+		
+		return estimatedCost;
+    	
     }
     
     @Override
@@ -39,7 +72,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 			labels[i].setId(i);
 			
 			// Set the estimated cost to the destination
-			labels[i].setEstimatedCost(data.getDestination());
+			labels[i].setEstimatedCost(calculateEstimatedCostToDestination(data, labels[i]));
 			
 		}
     	

@@ -1,5 +1,6 @@
 package org.insa.algo.shortestpath;
 
+import org.insa.algo.AbstractInputData;
 import org.insa.graph.Node;
 
 public class LabelStar extends Label {
@@ -13,8 +14,10 @@ public class LabelStar extends Label {
 		
 	}
 	
-	public void setEstimatedCost(Node destination) {
-		this.estimatedCost = this.getNode().getPoint().distanceTo(destination.getPoint());
+	public void setEstimatedCost(double estimatedCost) {
+		
+		this.estimatedCost = estimatedCost;
+		
 	}
 	
 	public double getEstimatedCost() {

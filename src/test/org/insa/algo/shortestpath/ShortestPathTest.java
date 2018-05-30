@@ -195,7 +195,7 @@ public class ShortestPathTest {
     
     
     @Test
-    public void verifyLengthWhenOriginIsDestination() throws IOException {
+    public void verifyDijkstraLengthWhenOriginIsDestination() throws IOException {
     	
     	ShortestPathData data;
   	    
@@ -227,7 +227,7 @@ public class ShortestPathTest {
     }
     
     @Test
-    public void verifyLengthWithALongPath() throws IOException {
+    public void verifyDijkstraLengthWithALongPath() throws IOException {
     	
     	ShortestPathData data;
   	    
@@ -256,7 +256,7 @@ public class ShortestPathTest {
     }
     
     @Test
-    public void verifyLengthWithAMediumPath() throws IOException {
+    public void verifyDijkstraLengthWithAMediumPath() throws IOException {
     	
     	ShortestPathData data;
   	    
@@ -285,7 +285,7 @@ public class ShortestPathTest {
     }
     
     @Test
-    public void verifyLengthWithAShortPath() throws IOException {
+    public void verifyDijkstraLengthWithAShortPath() throws IOException {
     	
     	ShortestPathData data;
   	    
@@ -315,7 +315,7 @@ public class ShortestPathTest {
     }
     
     @Test
-    public void verifyLengthImpossiblePath() throws IOException {
+    public void verifyDijkstraLengthImpossiblePath() throws IOException {
     	
     	ShortestPathData data;
   	    
@@ -345,7 +345,7 @@ public class ShortestPathTest {
     }
     
     @Test
-    public void verifyTimeWhenOriginIsDestination() throws IOException {
+    public void verifyDijkstraTimeWhenOriginIsDestination() throws IOException {
     	
     	ShortestPathData data;
   	    
@@ -376,7 +376,7 @@ public class ShortestPathTest {
     }
     
     @Test
-    public void verifyMinTimeWithALongPath() throws IOException {
+    public void verifyDijkstraMinTimeWithALongPath() throws IOException {
     	
     	ShortestPathData data;
   	    
@@ -406,7 +406,7 @@ public class ShortestPathTest {
     }
     
     @Test
-    public void verifyMinTimeWithAMediumPath() throws IOException {
+    public void verifyDijkstraMinTimeWithAMediumPath() throws IOException {
     	
     	ShortestPathData data;
   	    
@@ -436,7 +436,7 @@ public class ShortestPathTest {
     }
     
     @Test
-    public void verifyMinTimeWithAShortPath() throws IOException {
+    public void verifyDijkstraMinTimeWithAShortPath() throws IOException {
     	
     	ShortestPathData data;
   	    
@@ -466,7 +466,7 @@ public class ShortestPathTest {
     }
     
     @Test
-    public void verifyMinTimeImpossiblePath() throws IOException {
+    public void verifyDijkstraMinTimeImpossiblePath() throws IOException {
     	
     	ShortestPathData data;
   	    
@@ -529,7 +529,6 @@ public class ShortestPathTest {
 	    else {
 		    assertTrue(solDijkstraAB.getPath().getLength() <=(solDijkstraAC.getPath().getLength()+solDijkstraCB.getPath().getLength()));
 	    }
-  	    
     	
     }
     
