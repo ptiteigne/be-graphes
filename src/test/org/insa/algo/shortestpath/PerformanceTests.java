@@ -165,7 +165,11 @@ public class PerformanceTests {
 			// Initializing the file descriptor of the results
 			FileWriter fos = new FileWriter(lengthPerfsFile);
 			PrintWriter dos = new PrintWriter(fos);
-			dos.println("ExecTime;Dijkstra;AStar");
+			
+			if(!debug)
+				dos.println("ExecTime;Dijkstra;AStar");
+			else
+				dos.println("NodeOne;NodeTwo;Dijkstra;AStar");
 			
 			long execTime;
 			
@@ -173,10 +177,12 @@ public class PerformanceTests {
 			for (int i=0; i < numberOfPairsToTest; i++)
 			{
 				
-				//Print the number of the test
-				dos.print(i + ";");
-				
-				//(We could also print the Ids of the nodes)
+				// Print the number of the test
+				if(!debug)
+					dos.print(i + ";");
+				//If debug, we also print the Ids of the nodes tested
+				else
+					dos.print(testBatch[i].getStartNode().getId() + ";" + testBatch[i].getEndNode().getId() + ";");
 				
 				// Execute the DIJKSTRA algorithm
 				execTime = getExecutionTimeOfTheAlgorithm(AlgoChoice.Dijsktra, testBatch[i], filterLengthAndAllArcs);
