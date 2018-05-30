@@ -32,16 +32,16 @@ public class PerformanceTests {
 	
 	
 	// Path to the node pairs set file
-	private final static String nodePairsSetFile = "C:/Users/j-640/Desktop/BEGraphesNodePairsSet.csv";
+	private final static String nodePairsSetFile = "C:/Users/j-640/Desktop/NodePairsSet.csv";
 	
 	// Path to the csv length results file
-	private final static String lengthPerfsFile = "../../../../../../../BEGraphesLENGTHPerfs.csv";
+	private final static String lengthPerfsFile = "C:/Users/j-640/Desktop/BEGraphesLENGTHPerfs.csv";
 	
 	// Path to the csv time results file
-	private final static String timePerfsFile = "../../../../../../../BEGraphesTIMEPerfs.csv";
+	private final static String timePerfsFile = "C:/Users/j-640/Desktop/BEGraphesTIMEPerfs.csv";
 	
 	// Number of pairs of Node to test
-	private final static int numberOfPairsToTest = 1000;
+	private final static int numberOfPairsToTest = 10;
 	
 	// Graph used for the tests
     private static Graph graph;
@@ -99,8 +99,8 @@ public class PerformanceTests {
                  } while (!testAStar.doRun().isFeasible());
                  testBatch[i] = new NodePair(startNode, endNode);
                  
-                 dos.print(startNode.getId() + "\t");
-                 dos.print(endNode.getId() + "\t");
+                 dos.print(startNode.getId() + ";");
+                 dos.println(endNode.getId());
                  
                  if(debug) {
                     //System.out.println("Node pair: Start=" + testBatch[i].getStartNode() + " and End=" + testBatch[i].getEndNode());
@@ -116,9 +116,11 @@ public class PerformanceTests {
         
         catch (IOException e) {
         	System.out.println("Error Printing Tab Delimited File");
+        	System.out.println("The file path is " + nodePairsSetFile);
+        	System.out.println("Are you sure?");
     	}
 
-        	System.out.println("Pairs Generated!");
+        System.out.println("Pairs Generated!");
         	
     }
     
@@ -162,7 +164,7 @@ public class PerformanceTests {
 			// Initializing the file descriptor of the results
 			FileWriter fos = new FileWriter(lengthPerfsFile);
 			PrintWriter dos = new PrintWriter(fos);
-			dos.println("ExecTime\tDijkstra\tHeading3\t");
+			dos.println("ExecTime;Dijkstra;AStar");
 			
 			long execTime;
 			
@@ -171,19 +173,19 @@ public class PerformanceTests {
 			{
 				
 				//Print the number of the test
-				dos.print(i + "\t");
+				dos.print(i + ";");
 				
 				//(We could also print the Ids of the nodes)
 				
 				// Execute the DIJKSTRA algorithm
 				execTime = getExecutionTimeOfTheAlgorithm(AlgoChoice.Dijsktra, testBatch[i], filterLengthAndAllArcs);
 				// Print the execution time in the file
-				dos.print(execTime+"\t");
+				dos.print(execTime+";");
 				
 				// Execute the DIJKSTRA algorithm
 				execTime = getExecutionTimeOfTheAlgorithm(AlgoChoice.AStar, testBatch[i], filterLengthAndAllArcs);
 				// Print the execution time in the file
-				dos.print(execTime+"\t");
+				dos.print(execTime);
 				
 				dos.println();
 				
@@ -194,6 +196,8 @@ public class PerformanceTests {
 		
 		catch (IOException e) {
 			System.out.println("Error Printing Tab Delimited File");
+			System.out.println("The file path is " + lengthPerfsFile);
+        	System.out.println("Are you sure?");
 		}
    
     }
