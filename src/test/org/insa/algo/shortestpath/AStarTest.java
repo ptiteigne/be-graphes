@@ -93,7 +93,8 @@ public class AStarTest {
         
         // Initialization for oracle test with map
 
-        String mapName = "/home/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/guadeloupe.mapgr";
+        //String mapName = "/home/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/guadeloupe.mapgr";
+        String mapName = "D:/Biblio/Téléchargements/guadeloupe.mapgr";
         
         GraphReader reader = new BinaryGraphReader(
                 new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
@@ -102,53 +103,14 @@ public class AStarTest {
 
 
     }
-    
-    
-    @Test
-    public void compareDijkstraAndBellmanWithManualGraph() throws IOException {
-    
-	    ShortestPathData data;
-	    
-	    DijkstraAlgorithm dijkstra;
-	    ShortestPathSolution solDijkstra;
-	    
-    	BellmanFordAlgorithm bellman;
-	    ShortestPathSolution solBellman;
-	    
-	    for(int i = 0; i < 6; i++) {
-	    	
-	    	for (int j = 0; j < 6; j++) {
-	    		
-	    		if (i==j)
-	    			continue;
-	    		
-		    	data = new ShortestPathData(graph, nodes[i], nodes[j], filterLengthAndAllArcs);
-			    
-			    dijkstra = new DijkstraAlgorithm(data);
-			    solDijkstra = dijkstra.doRun();
-			    
-		    	bellman = new BellmanFordAlgorithm(data);
-			    solBellman = bellman.doRun();
-			    
-			    if (!solDijkstra.isFeasible() || !solBellman.isFeasible()) {
-			    	assertEquals(solDijkstra.isFeasible(), solBellman.isFeasible());
-			    	continue;
-			    }
-			    
-			    assertEquals(solDijkstra.getPath().getLength(), solBellman.getPath().getLength(),0.1);
-			    
-	    	}
-		    
-	    }
-	    
-    }
+
     
     public static void displayDijsktraLengths() {
     	
     	ShortestPathData data;
 	    
-	    DijkstraAlgorithm dijkstra;
-	    ShortestPathSolution solDijkstra;
+	    AStarAlgorithm aStar;
+	    ShortestPathSolution solAStar;
 	    
     //	BellmanFordAlgorithm bellman;
 	//    ShortestPathSolution solBellman;
@@ -177,13 +139,13 @@ public class AStarTest {
 	    		
 		    	data = new ShortestPathData(graph, nodes[i], nodes[j], filterLengthAndAllArcs);
 			    
-			    dijkstra = new DijkstraAlgorithm(data);
-			    solDijkstra = dijkstra.doRun();
+			    aStar = new AStarAlgorithm(data);
+			    solAStar = aStar.doRun();
 			    
-			    if (!solDijkstra.isFeasible())
+			    if (!solAStar.isFeasible())
 			    	System.out.print("00\t| ");
 			    else	    
-			    	System.out.print((int)solDijkstra.getPath().getLength() + "\t| ");
+			    	System.out.print((int)solAStar.getPath().getLength() + "\t| ");
 			    
 	    	}
 	    	
@@ -195,12 +157,12 @@ public class AStarTest {
     
     
     @Test
-    public void verifyDijkstraLengthWhenOriginIsDestination() throws IOException {
+    public void verifyAStarLengthWhenOriginIsDestination() throws IOException {
     	
     	ShortestPathData data;
   	    
-  	    DijkstraAlgorithm dijkstra;
-  	    ShortestPathSolution solDijkstra;
+  	    AStarAlgorithm aStar;
+  	    ShortestPathSolution solAStar;
   	    
       	BellmanFordAlgorithm bellman;
   	    ShortestPathSolution solBellman;
@@ -209,88 +171,88 @@ public class AStarTest {
   	   // Test destination = origin 
   	   data = new ShortestPathData(graph_map, graph_map.get(7623), graph_map.get(7623), filterLengthAndAllArcs);
 	    
-	   dijkstra = new DijkstraAlgorithm(data);
-	   solDijkstra = dijkstra.doRun();
+	   aStar = new AStarAlgorithm(data);
+	   solAStar = aStar.doRun();
 	    
 	   bellman = new BellmanFordAlgorithm(data);
 	   solBellman = bellman.doRun();
 	   
-	    if (!solDijkstra.isFeasible() || !solBellman.isFeasible()) {
-	    	assertEquals(solDijkstra.isFeasible(), solBellman.isFeasible());
+	    if (!solAStar.isFeasible() || !solBellman.isFeasible()) {
+	    	assertEquals(solAStar.isFeasible(), solBellman.isFeasible());
 	    }
 	    
 	    else {
-		    assertEquals(solDijkstra.getPath().getLength(), solBellman.getPath().getLength(),0.1);
+		    assertEquals(solAStar.getPath().getLength(), solBellman.getPath().getLength(),0.1);
 	    }
   	    
     	
     }
     
     @Test
-    public void verifyDijkstraLengthWithALongPath() throws IOException {
+    public void verifyAStarLengthWithALongPath() throws IOException {
     	
     	ShortestPathData data;
   	    
-  	    DijkstraAlgorithm dijkstra;
-  	    ShortestPathSolution solDijkstra;
+  	    AStarAlgorithm aStar;
+  	    ShortestPathSolution solAStar;
   	    
       	BellmanFordAlgorithm bellman;
   	    ShortestPathSolution solBellman;
   	    
   	   data = new ShortestPathData(graph_map, graph_map.get(10546), graph_map.get(12368), filterLengthAndAllArcs);
 	    
-	   dijkstra = new DijkstraAlgorithm(data);
-	   solDijkstra = dijkstra.doRun();
+	   aStar = new AStarAlgorithm(data);
+	   solAStar = aStar.doRun();
 	    
 	   bellman = new BellmanFordAlgorithm(data);
 	   solBellman = bellman.doRun();
 	   
-	    if (!solDijkstra.isFeasible() || !solBellman.isFeasible()) {
-	    	assertEquals(solDijkstra.isFeasible(), solBellman.isFeasible());
+	    if (!solAStar.isFeasible() || !solBellman.isFeasible()) {
+	    	assertEquals(solAStar.isFeasible(), solBellman.isFeasible());
 	    }
 	    
 	    else {
-		    assertEquals(solDijkstra.getPath().getLength(), solBellman.getPath().getLength(),0.1);
+		    assertEquals(solAStar.getPath().getLength(), solBellman.getPath().getLength(),0.1);
 	    }
 	    
     }
     
     @Test
-    public void verifyDijkstraLengthWithAMediumPath() throws IOException {
+    public void verifyAStarLengthWithAMediumPath() throws IOException {
     	
     	ShortestPathData data;
   	    
-  	    DijkstraAlgorithm dijkstra;
-  	    ShortestPathSolution solDijkstra;
+  	    AStarAlgorithm aStar;
+  	    ShortestPathSolution solAStar;
   	    
       	BellmanFordAlgorithm bellman;
   	    ShortestPathSolution solBellman;
   	    
   	   data = new ShortestPathData(graph_map, graph_map.get(21851), graph_map.get(14918), filterLengthAndAllArcs);
 	    
-	   dijkstra = new DijkstraAlgorithm(data);
-	   solDijkstra = dijkstra.doRun();
+	   aStar = new AStarAlgorithm(data);
+	   solAStar = aStar.doRun();
 	    
 	   bellman = new BellmanFordAlgorithm(data);
 	   solBellman = bellman.doRun();
 	   
-	    if (!solDijkstra.isFeasible() || !solBellman.isFeasible()) {
-	    	assertEquals(solDijkstra.isFeasible(), solBellman.isFeasible());
+	    if (!solAStar.isFeasible() || !solBellman.isFeasible()) {
+	    	assertEquals(solAStar.isFeasible(), solBellman.isFeasible());
 	    }
 	    
 	    else {
-		    assertEquals(solDijkstra.getPath().getLength(), solBellman.getPath().getLength(),0.1);
+		    assertEquals(solAStar.getPath().getLength(), solBellman.getPath().getLength(),0.1);
 	    }
 	    
     }
     
     @Test
-    public void verifyDijkstraLengthWithAShortPath() throws IOException {
+    public void verifyAStarLengthWithAShortPath() throws IOException {
     	
     	ShortestPathData data;
   	    
-  	    DijkstraAlgorithm dijkstra;
-  	    ShortestPathSolution solDijkstra;
+  	    AStarAlgorithm aStar;
+  	    ShortestPathSolution solAStar;
   	    
       	BellmanFordAlgorithm bellman;
   	    ShortestPathSolution solBellman;
@@ -298,29 +260,29 @@ public class AStarTest {
   	    
   	   data = new ShortestPathData(graph_map, graph_map.get(12256), graph_map.get(8107), filterLengthAndAllArcs);
 	    
-	   dijkstra = new DijkstraAlgorithm(data);
-	   solDijkstra = dijkstra.doRun();
+	   aStar = new AStarAlgorithm(data);
+	   solAStar = aStar.doRun();
 	    
 	   bellman = new BellmanFordAlgorithm(data);
 	   solBellman = bellman.doRun();
 	   
-	    if (!solDijkstra.isFeasible() || !solBellman.isFeasible()) {
-	    	assertEquals(solDijkstra.isFeasible(), solBellman.isFeasible());
+	    if (!solAStar.isFeasible() || !solBellman.isFeasible()) {
+	    	assertEquals(solAStar.isFeasible(), solBellman.isFeasible());
 	    }
 	    
 	    else {
-		    assertEquals(solDijkstra.getPath().getLength(), solBellman.getPath().getLength(),0.1);
+		    assertEquals(solAStar.getPath().getLength(), solBellman.getPath().getLength(),0.1);
 	    }
 	    
     }
     
     @Test
-    public void verifyDijkstraLengthImpossiblePath() throws IOException {
+    public void verifyAStarLengthImpossiblePath() throws IOException {
     	
     	ShortestPathData data;
   	    
-  	    DijkstraAlgorithm dijkstra;
-  	    ShortestPathSolution solDijkstra;
+  	    AStarAlgorithm aStar;
+  	    ShortestPathSolution solAStar;
   	    
       	BellmanFordAlgorithm bellman;
   	    ShortestPathSolution solBellman;
@@ -328,29 +290,29 @@ public class AStarTest {
 
   	   data = new ShortestPathData(graph_map, graph_map.get(15656), graph_map.get(15046), filterLengthAndAllArcs);
 	    
-	   dijkstra = new DijkstraAlgorithm(data);
-	   solDijkstra = dijkstra.doRun();
+	   aStar = new AStarAlgorithm(data);
+	   solAStar = aStar.doRun();
 	    
 	   bellman = new BellmanFordAlgorithm(data);
 	   solBellman = bellman.doRun();
 	   
-	    if (!solDijkstra.isFeasible() || !solBellman.isFeasible()) {
-	    	assertEquals(solDijkstra.isFeasible(), solBellman.isFeasible());
+	    if (!solAStar.isFeasible() || !solBellman.isFeasible()) {
+	    	assertEquals(solAStar.isFeasible(), solBellman.isFeasible());
 	    }
 	    
 	    else {
-		    assertEquals(solDijkstra.getPath().getLength(), solBellman.getPath().getLength(),0.1);
+		    assertEquals(solAStar.getPath().getLength(), solBellman.getPath().getLength(),0.1);
 	    }
 	    
     }
     
     @Test
-    public void verifyDijkstraTimeWhenOriginIsDestination() throws IOException {
+    public void verifyAStarTimeWhenOriginIsDestination() throws IOException {
     	
     	ShortestPathData data;
   	    
-  	    DijkstraAlgorithm dijkstra;
-  	    ShortestPathSolution solDijkstra;
+  	    AStarAlgorithm aStar;
+  	    ShortestPathSolution solAStar;
   	    
       	BellmanFordAlgorithm bellman;
   	    ShortestPathSolution solBellman;
@@ -358,30 +320,30 @@ public class AStarTest {
 
   	   data = new ShortestPathData(graph_map, graph_map.get(7623), graph_map.get(7623), filterTimeAndCar);
 	    
-	   dijkstra = new DijkstraAlgorithm(data);
-	   solDijkstra = dijkstra.doRun();
+	   aStar = new AStarAlgorithm(data);
+	   solAStar = aStar.doRun();
 	    
 	   bellman = new BellmanFordAlgorithm(data);
 	   solBellman = bellman.doRun();
 	   
-	    if (!solDijkstra.isFeasible() || !solBellman.isFeasible()) {
-	    	assertEquals(solDijkstra.isFeasible(), solBellman.isFeasible());
+	    if (!solAStar.isFeasible() || !solBellman.isFeasible()) {
+	    	assertEquals(solAStar.isFeasible(), solBellman.isFeasible());
 	    }
 	    
 	    else {
-		    assertEquals(solDijkstra.getPath().getMinimumTravelTime(), solBellman.getPath().getMinimumTravelTime(),0.1);
+		    assertEquals(solAStar.getPath().getMinimumTravelTime(), solBellman.getPath().getMinimumTravelTime(),0.1);
 	    }
   	    
     	
     }
     
     @Test
-    public void verifyDijkstraMinTimeWithALongPath() throws IOException {
+    public void verifyAStarMinTimeWithALongPath() throws IOException {
     	
     	ShortestPathData data;
   	    
-  	    DijkstraAlgorithm dijkstra;
-  	    ShortestPathSolution solDijkstra;
+  	    AStarAlgorithm aStar;
+  	    ShortestPathSolution solAStar;
   	    
       	BellmanFordAlgorithm bellman;
   	    ShortestPathSolution solBellman;
@@ -389,29 +351,29 @@ public class AStarTest {
 
   	   data = new ShortestPathData(graph_map, graph_map.get(10546), graph_map.get(12368), filterTimeAndCar);
 	    
-	   dijkstra = new DijkstraAlgorithm(data);
-	   solDijkstra = dijkstra.doRun();
+	   aStar = new AStarAlgorithm(data);
+	   solAStar = aStar.doRun();
 	    
 	   bellman = new BellmanFordAlgorithm(data);
 	   solBellman = bellman.doRun();
 	   
-	    if (!solDijkstra.isFeasible() || !solBellman.isFeasible()) {
-	    	assertEquals(solDijkstra.isFeasible(), solBellman.isFeasible());
+	    if (!solAStar.isFeasible() || !solBellman.isFeasible()) {
+	    	assertEquals(solAStar.isFeasible(), solBellman.isFeasible());
 	    }
 	    
 	    else {
-		    assertEquals(solDijkstra.getPath().getMinimumTravelTime(), solBellman.getPath().getMinimumTravelTime(),0.1);
+		    assertEquals(solAStar.getPath().getMinimumTravelTime(), solBellman.getPath().getMinimumTravelTime(),0.1);
 	    }
 	    
     }
     
     @Test
-    public void verifyDijkstraMinTimeWithAMediumPath() throws IOException {
+    public void verifyAStarMinTimeWithAMediumPath() throws IOException {
     	
     	ShortestPathData data;
   	    
-  	    DijkstraAlgorithm dijkstra;
-  	    ShortestPathSolution solDijkstra;
+  	    AStarAlgorithm aStar;
+  	    ShortestPathSolution solAStar;
   	    
       	BellmanFordAlgorithm bellman;
   	    ShortestPathSolution solBellman;
@@ -419,29 +381,29 @@ public class AStarTest {
 
   	   data = new ShortestPathData(graph_map, graph_map.get(21851), graph_map.get(14918), filterTimeAndCar);
 	    
-	   dijkstra = new DijkstraAlgorithm(data);
-	   solDijkstra = dijkstra.doRun();
+	   aStar = new AStarAlgorithm(data);
+	   solAStar = aStar.doRun();
 	    
 	   bellman = new BellmanFordAlgorithm(data);
 	   solBellman = bellman.doRun();
 	   
-	    if (!solDijkstra.isFeasible() || !solBellman.isFeasible()) {
-	    	assertEquals(solDijkstra.isFeasible(), solBellman.isFeasible());
+	    if (!solAStar.isFeasible() || !solBellman.isFeasible()) {
+	    	assertEquals(solAStar.isFeasible(), solBellman.isFeasible());
 	    }
 	    
 	    else {
-		    assertEquals(solDijkstra.getPath().getMinimumTravelTime(), solBellman.getPath().getMinimumTravelTime(),0.1);
+		    assertEquals(solAStar.getPath().getMinimumTravelTime(), solBellman.getPath().getMinimumTravelTime(),0.1);
 	    }
 	    
     }
     
     @Test
-    public void verifyDijkstraMinTimeWithAShortPath() throws IOException {
+    public void verifyAStarMinTimeWithAShortPath() throws IOException {
     	
     	ShortestPathData data;
   	    
-  	    DijkstraAlgorithm dijkstra;
-  	    ShortestPathSolution solDijkstra;
+  	    AStarAlgorithm aStar;
+  	    ShortestPathSolution solAStar;
   	    
       	BellmanFordAlgorithm bellman;
   	    ShortestPathSolution solBellman;
@@ -449,29 +411,29 @@ public class AStarTest {
 
   	   data = new ShortestPathData(graph_map, graph_map.get(12256), graph_map.get(8107), filterTimeAndCar);
 	    
-	   dijkstra = new DijkstraAlgorithm(data);
-	   solDijkstra = dijkstra.doRun();
+	   aStar = new AStarAlgorithm(data);
+	   solAStar = aStar.doRun();
 	    
 	   bellman = new BellmanFordAlgorithm(data);
 	   solBellman = bellman.doRun();
 	   
-	    if (!solDijkstra.isFeasible() || !solBellman.isFeasible()) {
-	    	assertEquals(solDijkstra.isFeasible(), solBellman.isFeasible());
+	    if (!solAStar.isFeasible() || !solBellman.isFeasible()) {
+	    	assertEquals(solAStar.isFeasible(), solBellman.isFeasible());
 	    }
 	    
 	    else {
-		    assertEquals(solDijkstra.getPath().getMinimumTravelTime(), solBellman.getPath().getMinimumTravelTime(),0.1);
+		    assertEquals(solAStar.getPath().getMinimumTravelTime(), solBellman.getPath().getMinimumTravelTime(),0.1);
 	    }
 	    
     }
     
     @Test
-    public void verifyDijkstraMinTimeImpossiblePath() throws IOException {
+    public void verifyAStarMinTimeImpossiblePath() throws IOException {
     	
     	ShortestPathData data;
   	    
-  	    DijkstraAlgorithm dijkstra;
-  	    ShortestPathSolution solDijkstra;
+  	    AStarAlgorithm aStar;
+  	    ShortestPathSolution solAStar;
   	    
       	BellmanFordAlgorithm bellman;
   	    ShortestPathSolution solBellman;
@@ -479,18 +441,18 @@ public class AStarTest {
 
   	   data = new ShortestPathData(graph_map, graph_map.get(15656), graph_map.get(15046), filterTimeAndCar);
 	    
-	   dijkstra = new DijkstraAlgorithm(data);
-	   solDijkstra = dijkstra.doRun();
+	   aStar = new AStarAlgorithm(data);
+	   solAStar = aStar.doRun();
 	    
 	   bellman = new BellmanFordAlgorithm(data);
 	   solBellman = bellman.doRun();
 	   
-	    if (!solDijkstra.isFeasible() || !solBellman.isFeasible()) {
-	    	assertEquals(solDijkstra.isFeasible(), solBellman.isFeasible());
+	    if (!solAStar.isFeasible() || !solBellman.isFeasible()) {
+	    	assertEquals(solAStar.isFeasible(), solBellman.isFeasible());
 	    }
 	    
 	    else {
-		    assertEquals(solDijkstra.getPath().getMinimumTravelTime(), solBellman.getPath().getMinimumTravelTime(),0.1);
+		    assertEquals(solAStar.getPath().getMinimumTravelTime(), solBellman.getPath().getMinimumTravelTime(),0.1);
 	    }
 	    
     }
@@ -502,32 +464,32 @@ public class AStarTest {
     	
     	ShortestPathData dataAB, dataAC, dataCB;
   	    
-  	    DijkstraAlgorithm dijkstraAB, dijkstraAC, dijkstraCB;
-  	    ShortestPathSolution solDijkstraAB, solDijkstraAC, solDijkstraCB;
+  	    AStarAlgorithm aStarAB, aStarAC, aStarCB;
+  	    ShortestPathSolution solAStarAB, solAStarAC, solAStarCB;
   	    
   	    
   	   dataAB = new ShortestPathData(graph_map, graph_map.get(19208), graph_map.get(12304), filterLengthAndAllArcs);
 	    
-	   dijkstraAB = new DijkstraAlgorithm(dataAB);
-	   solDijkstraAB = dijkstraAB.doRun();
+	   aStarAB = new AStarAlgorithm(dataAB);
+	   solAStarAB = aStarAB.doRun();
 	   
 	   
 	   dataAC = new ShortestPathData(graph_map, graph_map.get(19208), graph_map.get(9918), filterLengthAndAllArcs); 
-	   dijkstraAC = new DijkstraAlgorithm(dataAC);
-	   solDijkstraAC = dijkstraAC.doRun();
+	   aStarAC = new AStarAlgorithm(dataAC);
+	   solAStarAC = aStarAC.doRun();
 	   
 	   
 	   dataCB = new ShortestPathData(graph_map, graph_map.get(9918), graph_map.get(12304), filterLengthAndAllArcs); 
-	   dijkstraCB = new DijkstraAlgorithm(dataCB);
-	   solDijkstraCB = dijkstraCB.doRun();
+	   aStarCB = new AStarAlgorithm(dataCB);
+	   solAStarCB = aStarCB.doRun();
 	    
 	   // if AB is not feasible,we test if one of AC or BC is not feasible
-	    if (!solDijkstraAB.isFeasible() || !solDijkstraAC.isFeasible() || !solDijkstraCB.isFeasible()) {
-	    	assertEquals(solDijkstraAB.isFeasible(), solDijkstraCB.isFeasible() && solDijkstraCB.isFeasible());
+	    if (!solAStarAB.isFeasible() || !solAStarAC.isFeasible() || !solAStarCB.isFeasible()) {
+	    	assertEquals(solAStarAB.isFeasible(), solAStarCB.isFeasible() && solAStarCB.isFeasible());
 	    }
 	    
 	    else {
-		    assertTrue(solDijkstraAB.getPath().getLength() <=(solDijkstraAC.getPath().getLength()+solDijkstraCB.getPath().getLength()));
+		    assertTrue(solAStarAB.getPath().getLength() <=(solAStarAC.getPath().getLength()+solAStarCB.getPath().getLength()));
 	    }
     	
     }
