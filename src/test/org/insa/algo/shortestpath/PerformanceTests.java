@@ -283,7 +283,7 @@ public class PerformanceTests {
 				
 				// Print (or not if !debug) the node pairs
 				if(debug)
-					dos.print(testBatch[i].getStartNode() + ";" + testBatch[i].getEndNode() + ";");
+					dos.print(testBatch[i].getStartNode().getId() + ";" + testBatch[i].getEndNode().getId() + ";");
 				
 				// Print dijkstra results
 				if(dijkstraResults == null)
