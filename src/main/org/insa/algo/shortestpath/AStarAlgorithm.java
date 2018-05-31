@@ -50,6 +50,20 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
     	
     }
     
+    private LabelStar instantiateLabelStar(Node node, ShortestPathData data) {
+    	
+    	LabelStar label = new LabelStar();
+
+		label.setNode(node);
+		label.setId(node.getId());
+		
+		// Set the estimated cost to the destination
+		label.setEstimatedCost(calculateEstimatedCostToDestination(data, label));
+			
+    	return label;
+    	
+    }
+    
     @Override
     protected ShortestPathSolution doRun() {
 
@@ -65,17 +79,39 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 		// Initialize array of labels.
 		LabelStar[] labels = new LabelStar[nbNodes];
 		
+		// Array telling if the corresponding label (with the node id) has been initialized
+		boolean[] labelIsInitialized = new boolean[nbNodes];
+		
+		// Setting all the labels to "not initialized"
+		for(int i = 0; i < nbNodes; i++)
+			labelIsInitialized[i] = false;
+		
+		// UPDATE :
+		/*
+		 * We don't initialize labels anymore!
+		 * They will be initialized later...
+		 * ... ONLY WHEN NEEDED
+		 */
 		//Initialize labels, but check if Nodes id are correct
-		for (int i=0; i<nbNodes ; i++) {
-			labels[i] = new LabelStar();
-			labels[i].setNode(graph.get(i));
-			labels[i].setId(i);
-			
-			// Set the estimated cost to the destination
-			labels[i].setEstimatedCost(calculateEstimatedCostToDestination(data, labels[i]));
-			
-		}
+//		for (int i=0; i<nbNodes ; i++) {
+//			labels[i] = new LabelStar();
+//			labels[i].setNode(graph.get(i));
+//			labels[i].setId(i);
+//			
+//			// Set the estimated cost to the destination
+//			labels[i].setEstimatedCost(calculateEstimatedCostToDestination(data, labels[i]));
+//			
+//		}
     	
+		
+		// Instantiating the label of the origin
+		labels[data.getOrigin().getId()] = instantiateLabelStar(data.getOrigin(),data);
+		labelIsInitialized[data.getOrigin().getId()] = true;
+		
+		// Instantiating the the label of the destination
+		labels[data.getDestination().getId()] = instantiateLabelStar(data.getDestination(),data);
+		labelIsInitialized[data.getDestination().getId()] = true;
+		
 		// Set source cost to zero and insert it on the heap
 		labels[data.getOrigin().getId()].setCost(0);
 		heap.insert(labels[data.getOrigin().getId()]);
@@ -118,10 +154,21 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 				
 				nextNode = arc.getDestination();
 				
+				//DEBUG
+//				if(nextNode.getId() == data.getDestination().getId()) {
+//					System.out.println("Destination touchée!");
+//				}
+				
 				// If the following node hasn't been marked...
 				//if(!labels[nextNode.getId()].isMarked()) {
 					
 				notifyNodeReached(nextNode);
+				
+				// Instantiate the label of the next node if it hasn't been done
+				if(labelIsInitialized[nextNode.getId()] == false) {
+					labels[nextNode.getId()] = instantiateLabelStar(nextNode, data);
+					labelIsInitialized[nextNode.getId()] = true;
+				}
 				
 				// If we found a cheaper path to this node... we update its cost and set his new father
 				if (labels[nextNode.getId()].getCost() >
@@ -138,6 +185,11 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 					
 					heap.insert(labels[nextNode.getId()]);
 					
+					//DEBUG
+//					if(nextNode.getId() == data.getDestination().getId()) {
+//						System.out.println("Destination INSEREE!");
+//					}
+					
 				}
 					
 					
@@ -145,6 +197,8 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
 			}
 			
 		}
+		
+		//System.out.println("Fini!");
     	
     	ShortestPathSolution solution = null;
     	

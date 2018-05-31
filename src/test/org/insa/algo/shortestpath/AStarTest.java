@@ -37,14 +37,6 @@ public class AStarTest {
 
     // List of nodes
     private static Node[] nodes;
-
-    // List of arcs in the graph
-    @SuppressWarnings("unused")
-    private static Arc 	x1_x2, x1_x3,
-    					x2_x4,x2_x5, x2_x6, 
-    					x3_x1, x3_x2, x3_x6, 
-    					x5_x3, x5_x4, x5_x6,
-    					x6_x5;
     
     // Arc filter (looking for minimum length, all arcs permitted)
     private static ArcInspector filterLengthAndAllArcs;
@@ -57,32 +49,7 @@ public class AStarTest {
 //            invalidPath;
 
     @BeforeClass
-    public static void initAll() throws IOException {
-
-        // 10 and 20 meters per seconds
-        RoadInformation speed10 = new RoadInformation(RoadType.MOTORWAY, null, true, 36, "");
-               
-
-        // Create nodes
-        nodes = new Node[6];
-        for (int i = 0; i < nodes.length; ++i) {
-            nodes[i] = new Node(i, null);
-        }
-
-        // Add arcs...
-        x1_x2 = Node.linkNodes(nodes[0], nodes[1], 7, speed10, null);
-        x1_x3 = Node.linkNodes(nodes[0], nodes[2], 8, speed10, null);
-		x2_x4 = Node.linkNodes(nodes[1], nodes[3], 4, speed10, null);
-		x2_x5 = Node.linkNodes(nodes[1], nodes[4], 1, speed10, null);
-		x2_x6 = Node.linkNodes(nodes[1], nodes[5], 5, speed10, null);
-		x3_x1 = Node.linkNodes(nodes[2], nodes[0], 7, speed10, null);
-		x3_x2 = Node.linkNodes(nodes[2], nodes[1], 2, speed10, null);
-		x3_x6 = Node.linkNodes(nodes[2], nodes[5], 2, speed10, null);
-		x5_x3 = Node.linkNodes(nodes[4], nodes[2], 2, speed10, null);
-		x5_x4 = Node.linkNodes(nodes[4], nodes[3], 2, speed10, null);
-		x5_x6 = Node.linkNodes(nodes[4], nodes[5], 3, speed10, null); 
-		x6_x5 = Node.linkNodes(nodes[5], nodes[4], 3, speed10, null);
-        
+    public static void initAll() throws IOException {        
 
         graph = new Graph("ID", "", Arrays.asList(nodes), null);
         

@@ -94,6 +94,7 @@ public class ShortestPathTest {
         // Initialization for oracle test with map
 
         String mapName = "/home/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/guadeloupe.mapgr";
+        // String mapName = "D:/Biblio/Téléchargements/guadeloupe.mapgr";
         
         GraphReader reader = new BinaryGraphReader(
                 new DataInputStream(new BufferedInputStream(new FileInputStream(mapName))));
