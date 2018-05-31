@@ -311,6 +311,8 @@ public class PerformanceTests {
 			dos.close();
 			fos.close();
 			
+			System.out.println("Finished the tests!");
+			
 		} 
 		
 		catch (IOException e) {
