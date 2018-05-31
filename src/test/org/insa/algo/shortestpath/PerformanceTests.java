@@ -3,13 +3,16 @@ package org.insa.algo.shortestpath;
 import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.insa.algo.AbstractInputData.Mode;
 import org.insa.algo.ArcInspector;
 import org.insa.algo.ArcInspectorFactory;
 import org.insa.graph.Arc;
@@ -125,7 +128,89 @@ public class PerformanceTests {
         	
     }
     
-    private static long getExecutionTimeOfTheAlgorithm(AlgoChoice algo, NodePair nodePair, ArcInspector filter) {
+    // Read pairs of node from the given file
+    private static void loadTestBatchFromCSV(String csvFile) {
+	    	
+        String line = "";
+        String cvsSplitBy = ";";
+        
+        BufferedReader br;
+        FileReader fr;
+        
+        if(graph == null) {
+        	System.out.println("You cannot load a test batch before loading a graph.");
+        	return;
+        }
+
+        try {
+        	
+        	fr = new FileReader(csvFile);
+        	br = new BufferedReader(fr);
+            
+            // Count number of lines (= number of node pairs) in the csv
+            int nbNodePairs = 0;
+            while (br.readLine() != null) nbNodePairs++;
+            
+            fr.close();
+            br.close();
+            
+            // Instantiating the testBatch
+            testBatch = new NodePair[nbNodePairs];
+            
+            // Getting back to the beginning of the file
+            fr = new FileReader(csvFile);
+            br = new BufferedReader(fr);
+            
+            // Index of the NodePair currently being saved
+            int iNodePair = 0;
+            
+            // Fill the testBatch
+            while ((line = br.readLine()) != null) {
+
+	                // use semicolon as separator
+	                String[] columns = line.split(cvsSplitBy);
+	                
+	                testBatch[iNodePair] = new NodePair(graph.get(Integer.parseInt(columns[0])),
+	                									graph.get(Integer.parseInt(columns[1])));
+	                
+	                iNodePair++;
+
+	            }
+
+	        } 
+        
+        catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Exiting the program to avoid any more mistakes...");
+            System.exit(3);
+        }
+        catch (NullPointerException e) {
+        	e.printStackTrace();
+        	System.exit(3);
+        }
+        
+        System.out.println("Pairs loaded from csv file!");
+	    
+    }
+    
+    
+    // Print the pairs of node loaded from the test batch
+    private static void printLoadedNodePairs() {
+    	
+    	try {
+    		for(int i=0; i<testBatch.length; i++) {
+    			System.out.println(testBatch[i].getStartNode().getId() + " ; " + testBatch[i].getEndNode().getId()); 
+    		}
+    	}
+    	catch (NullPointerException e) {
+    		e.printStackTrace();
+    	}
+    	
+    }
+    
+    private static AlgoResults getAlgoResults(AlgoChoice algo, NodePair nodePair, ArcInspector filter) {
+    	
+    	AlgoResults algoResults = null;
     	
     	ShortestPathData data;
   	    
@@ -146,59 +231,86 @@ public class PerformanceTests {
 	   else if (algo == AlgoChoice.AStar)
 		   algorithm = new AStarAlgorithm(data);
 	   else
-		   return -1;
+		   return null;
 	   
 	   startTime = System.nanoTime();
 	   
 	   solution = algorithm.doRun();
 	   
 	   endTime = System.nanoTime();
-
-	   return endTime - startTime;
+	   
+	   
+	   if (data.getMode() == Mode.LENGTH)
+		   algoResults = new AlgoResults(endTime - startTime, solution.getPath().getLength());
+	   else if (data.getMode() == Mode.TIME)
+		   algoResults = new AlgoResults(endTime - startTime, solution.getPath().getMinimumTravelTime());
+	   
+	   return algoResults;
+	   
     	
     }
     
-    private static void makeLengthPerfomanceTests() {
+    // Write the performance tests into the csv file given to the method, with the filter given
+    private static void makePerfomanceTests(String csvFile, ArcInspector filter) {
 
 		try {
 			
 			// Initializing the file descriptor of the results
-			FileWriter fos = new FileWriter(lengthPerfsFile);
+			FileWriter fos = new FileWriter(csvFile);
 			PrintWriter dos = new PrintWriter(fos);
 			
 			if(!debug)
-				dos.println("ExecTime;Dijkstra;AStar");
+				dos.println("costDijsktra;ExecTimeDijkstra;costAStar;ExecTimeAStar");
 			else
-				dos.println("NodeOne;NodeTwo;Dijkstra;AStar");
+				dos.println("NodeOne;NodeTwo;costDijsktra;ExecTimeDijkstra;costAStar;ExecTimeAStar");
 			
-			long execTime;
+			AlgoResults dijkstraResults = null;
+			AlgoResults aStarResults = null;
+			
+			double progressPerCent;
 			
 			// loop through all your data and print it to the file
-			for (int i=0; i < numberOfPairsToTest; i++)
+			for (int i=0; i < testBatch.length; i++)
 			{
 				
-				// Print the number of the test
-				if(!debug)
-					dos.print(i + ";");
-				//If debug, we also print the Ids of the nodes tested
+				// Execute the DIJKSTRA algorithm
+				dijkstraResults = getAlgoResults(AlgoChoice.Dijsktra, testBatch[i], filter);
+				
+				
+				// Execute the ASTAR algorithm
+				aStarResults = getAlgoResults(AlgoChoice.AStar, testBatch[i], filter);
+				
+				
+				// Print (or not if !debug) the node pairs
+				if(debug)
+					dos.print(testBatch[i].getStartNode() + ";" + testBatch[i].getEndNode() + ";");
+				
+				// Print dijkstra results
+				if(dijkstraResults == null)
+					dos.print("X;X;");
 				else
-					dos.print(testBatch[i].getStartNode().getId() + ";" + testBatch[i].getEndNode().getId() + ";");
+					dos.print(dijkstraResults.getCost() + ";" + dijkstraResults.getExecTime() + ";");
 				
-				// Execute the DIJKSTRA algorithm
-				execTime = getExecutionTimeOfTheAlgorithm(AlgoChoice.Dijsktra, testBatch[i], filterLengthAndAllArcs);
-				// Print the execution time in the file
-				dos.print(execTime+";");
+				// Print aStar results
+				if(aStarResults == null)
+					dos.print("X;X;");
+				else
+					dos.print(aStarResults.getCost() + ";" + aStarResults.getExecTime() + ";");
 				
-				// Execute the DIJKSTRA algorithm
-				execTime = getExecutionTimeOfTheAlgorithm(AlgoChoice.AStar, testBatch[i], filterLengthAndAllArcs);
-				// Print the execution time in the file
-				dos.print(execTime);
-				
+				// Next line
 				dos.println();
 				
+				//Print progress to the screen every 10 algorithm execution
+				if (i%10 == 0) {
+					progressPerCent = ((double) i / (double) testBatch.length) * 100; 
+					System.out.println(filter.toString() + " : " + progressPerCent + "%");
+				}
+				
 			}
+			
 			dos.close();
 			fos.close();
+			
 		} 
 		
 		catch (IOException e) {
@@ -229,9 +341,11 @@ public class PerformanceTests {
         
         filterTimeAndCar = ArcInspectorFactory.getAllFilters().get(2);
     	
-    	generateTestBatch(numberOfPairsToTest);
+    	// generateTestBatch(numberOfPairsToTest);
+        loadTestBatchFromCSV("C:/Users/j-640/Desktop/NodePairsSet.csv");
+        // printLoadedNodePairs();
     	
-    	makeLengthPerfomanceTests();    	
+        makePerfomanceTests("C:/Users/j-640/Desktop/LengthPerfs.csv", filterLengthAndAllArcs);
     	
     }
 
