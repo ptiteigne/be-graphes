@@ -30,18 +30,18 @@ public class PerformanceTests {
 	}
 	
 	// Path(s) of the map(s) used for the tests
-	//private static String mapMidiPyrenees= "/home/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/midi-pyrenees.mapgr";
-	private final static String mapMidiPyrenees = "D:/Biblio/Téléchargements/midi-pyrenees.mapgr";
+	private static String mapMidiPyrenees= "/home/commetud/3eme Annee MIC/Graphes-et-Algorithmes/Maps/midi-pyrenees.mapgr";
+	// private final static String mapMidiPyrenees = "D:/Biblio/Tï¿½lï¿½chargements/midi-pyrenees.mapgr";
 	
 	
 	// Path to the node pairs set file
-	private final static String nodePairsSetFile = "C:/Users/j-640/Desktop/NodePairsSet.csv";
+	private final static String nodePairsSetFile = "/home/genoud/Bureau/Desktop/NodePairsSet.csv";
 	
 	// Path to the csv length results file
-	private final static String lengthPerfsFile = "C:/Users/j-640/Desktop/BEGraphesLENGTHPerfs.csv";
+	private final static String lengthPerfsFile = "/home/genoud/Bureau/BEGraphesLENGTHPerfs.csv";
 	
 	// Path to the csv time results file
-	private final static String timePerfsFile = "C:/Users/j-640/Desktop/BEGraphesTIMEPerfs.csv";
+	private final static String timePerfsFile = "/home/genoud/Bureau/BEGraphesTIMEPerfs.csv";
 	
 	// Number of pairs of Node to test
 	private final static int numberOfPairsToTest = 10;
@@ -344,10 +344,10 @@ public class PerformanceTests {
         filterTimeAndCar = ArcInspectorFactory.getAllFilters().get(2);
     	
     	// generateTestBatch(numberOfPairsToTest);
-        loadTestBatchFromCSV("C:/Users/j-640/Desktop/NodePairsSet.csv");
+        loadTestBatchFromCSV("/home/genoud/Bureau/NodePairsSet.csv");
         // printLoadedNodePairs();
     	
-        makePerfomanceTests("C:/Users/j-640/Desktop/LengthPerfs.csv", filterLengthAndAllArcs);
+        makePerfomanceTests("/home/genoud/Bureau/LengthPerfs.csv", filterTimeAndCar );
     	
     }
 
